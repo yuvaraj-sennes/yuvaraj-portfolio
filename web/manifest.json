@@ -4,8 +4,8 @@
     "description": "Flutter Developer | Building production mobile applications with Clean Architecture, BLoC, and Firebase",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0A0E21",
-    "theme_color": "#6C63FF",
+    "background_color": "#070B14",
+    "theme_color": "#7C6CFF",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

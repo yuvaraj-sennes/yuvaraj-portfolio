@@ -1,10 +1,16 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../data/portfolio_data.dart';
 import '../theme/app_theme.dart';
 import '../theme/layout.dart';
+import '../widgets/ambient_background.dart';
+import '../widgets/glow_card.dart';
+import '../widgets/gradient_text.dart';
+import '../widgets/reveal.dart';
 
 class PortfolioScreen extends StatefulWidget {
   const PortfolioScreen({super.key});
@@ -86,15 +92,8 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
         backgroundColor: AppTheme.background,
         body: Stack(
           children: [
-            DecoratedBox(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Color(0xFF0E1218), AppTheme.background],
-                ),
-              ),
-              child: ScrollConfiguration(
+            const AmbientBackground(),
+            ScrollConfiguration(
                 behavior: ScrollConfiguration.of(context).copyWith(
                   scrollbars: true,
                   physics: const ClampingScrollPhysics(
@@ -166,7 +165,6 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
                     const SliverToBoxAdapter(child: _Footer()),
                   ],
                 ),
-              ),
             ),
             _TopBar(
               width: width,
@@ -201,11 +199,21 @@ class _TopBar extends StatelessWidget {
       left: 0,
       right: 0,
       child: Material(
-        color: AppTheme.background.withValues(alpha: 0.92),
+        color: AppTheme.background.withValues(alpha: 0.78),
         elevation: 0,
         child: DecoratedBox(
-          decoration: const BoxDecoration(
-            border: Border(bottom: BorderSide(color: AppTheme.border)),
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(
+                color: AppTheme.primary.withValues(alpha: 0.25),
+              ),
+            ),
+            gradient: LinearGradient(
+              colors: [
+                AppTheme.surface.withValues(alpha: 0.5),
+                AppTheme.background.withValues(alpha: 0.2),
+              ],
+            ),
           ),
           child: SafeArea(
             bottom: false,
@@ -216,12 +224,12 @@ class _TopBar extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  Text(
-                    'YS',
+                  GradientText(
+                    text: '<YS/>',
                     style: GoogleFonts.jetBrainsMono(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                      color: AppTheme.accent,
+                      fontSize: 17,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
                     ),
                   ),
                   const Spacer(),
@@ -244,11 +252,31 @@ class _TopBar extends StatelessWidget {
                                 vertical: 10,
                               ),
                             ),
-                            child: Text(
-                              labels[i],
-                              style: AppTheme.label.copyWith(
-                                color: active ? AppTheme.textPrimary : AppTheme.textMuted,
-                                fontWeight: active ? FontWeight.w600 : FontWeight.w500,
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 200),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 4,
+                                vertical: 2,
+                              ),
+                              decoration: active
+                                  ? BoxDecoration(
+                                      border: Border(
+                                        bottom: BorderSide(
+                                          color: AppTheme.secondary,
+                                          width: 2,
+                                        ),
+                                      ),
+                                    )
+                                  : null,
+                              child: Text(
+                                labels[i],
+                                style: AppTheme.label.copyWith(
+                                  color: active
+                                      ? AppTheme.textPrimary
+                                      : AppTheme.textMuted,
+                                  fontWeight:
+                                      active ? FontWeight.w600 : FontWeight.w500,
+                                ),
                               ),
                             ),
                           ),
@@ -312,21 +340,47 @@ class _HeroSection extends StatelessWidget {
               isDesktop ? CrossAxisAlignment.start : CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('Hello — I\'m', style: AppTheme.label),
+            Text('Hello — I\'m', style: AppTheme.label)
+                .animate()
+                .fadeIn(duration: 500.ms)
+                .slideY(begin: 0.2, curve: Curves.easeOutCubic),
             const SizedBox(height: 12),
             FittedBox(
               fit: BoxFit.scaleDown,
               alignment: isDesktop ? Alignment.centerLeft : Alignment.center,
-              child: Text(PortfolioData.name, style: headline),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              PortfolioData.role,
-              style: AppTheme.cardTitle.copyWith(
-                color: AppTheme.accent,
-                fontSize: isDesktop ? 22 : 18,
+              child: GradientText(text: PortfolioData.name, style: headline),
+            )
+                .animate(delay: 120.ms)
+                .fadeIn(duration: 600.ms)
+                .slideX(begin: isDesktop ? -0.08 : 0, curve: Curves.easeOutCubic),
+            const SizedBox(height: 16),
+            SizedBox(
+              height: isDesktop ? 40 : 32,
+              child: DefaultTextStyle(
+                style: AppTheme.cardTitle.copyWith(
+                  fontSize: isDesktop ? 24 : 20,
+                  color: AppTheme.secondary,
+                ),
+                child: AnimatedTextKit(
+                  repeatForever: true,
+                  pause: const Duration(milliseconds: 1800),
+                  animatedTexts: [
+                    FadeAnimatedText(
+                      'Flutter Developer',
+                      duration: const Duration(milliseconds: 2200),
+                    ),
+                    FadeAnimatedText(
+                      'Mobile App Engineer',
+                      duration: const Duration(milliseconds: 2200),
+                    ),
+                    FadeAnimatedText(
+                      'Clean Architecture · BLoC',
+                      duration: const Duration(milliseconds: 2200),
+                    ),
+                  ],
+                ),
               ),
-            ),
+            ).animate(delay: 280.ms).fadeIn(duration: 500.ms),
             const SizedBox(height: 20),
             ConstrainedBox(
               constraints: BoxConstraints(maxWidth: isDesktop ? 520 : double.infinity),
@@ -335,48 +389,44 @@ class _HeroSection extends StatelessWidget {
                 style: AppTheme.body.copyWith(fontSize: isDesktop ? 17 : 16),
                 textAlign: isDesktop ? TextAlign.start : TextAlign.center,
               ),
-            ),
+            ).animate(delay: 400.ms).fadeIn(duration: 550.ms),
             const SizedBox(height: 32),
             Wrap(
               spacing: 12,
               runSpacing: 12,
               alignment: isDesktop ? WrapAlignment.start : WrapAlignment.center,
               children: [
-                FilledButton(
-                  onPressed: onProjects,
-                  style: FilledButton.styleFrom(
-                    backgroundColor: AppTheme.accent,
-                    foregroundColor: AppTheme.background,
-                    padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(AppTheme.radiusSm),
-                    ),
-                  ),
-                  child: const Text('View projects'),
-                ),
-                OutlinedButton(
-                  onPressed: () => launchUrl(Uri.parse('mailto:${PortfolioData.email}')),
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: AppTheme.textPrimary,
-                    side: const BorderSide(color: AppTheme.border),
-                    padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(AppTheme.radiusSm),
-                    ),
-                  ),
-                  child: const Text('Contact'),
+                _GradientButton(label: 'View projects', onTap: onProjects),
+                _OutlineGlowButton(
+                  label: 'Contact',
+                  onTap: () => launchUrl(Uri.parse('mailto:${PortfolioData.email}')),
                 ),
               ],
-            ),
+            ).animate(delay: 520.ms).fadeIn().slideY(begin: 0.15),
             const SizedBox(height: 36),
             Wrap(
               spacing: 10,
               runSpacing: 10,
               alignment: isDesktop ? WrapAlignment.start : WrapAlignment.center,
               children: PortfolioData.socialLinks
-                  .map((l) => _IconLink(icon: l.icon, url: l.url, label: l.name))
+                  .asMap()
+                  .entries
+                  .map(
+                    (e) => _IconLink(
+                      icon: e.value.icon,
+                      url: e.value.url,
+                      label: e.value.name,
+                      delayMs: 600 + e.key * 80,
+                    ),
+                  )
                   .toList(),
             ),
+            if (isDesktop) ...[
+              const Spacer(),
+              Icon(Icons.keyboard_arrow_down_rounded, color: AppTheme.secondary)
+                  .animate(onPlay: (c) => c.repeat(reverse: true))
+                  .moveY(begin: 0, end: 8, duration: 1200.ms, curve: Curves.easeInOut),
+            ],
           ],
         ),
       ),
@@ -384,27 +434,126 @@ class _HeroSection extends StatelessWidget {
   }
 }
 
+class _GradientButton extends StatefulWidget {
+  const _GradientButton({required this.label, required this.onTap});
+
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  State<_GradientButton> createState() => _GradientButtonState();
+}
+
+class _GradientButtonState extends State<_GradientButton> {
+  bool _hover = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hover = true),
+      onExit: (_) => setState(() => _hover = false),
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 16),
+          decoration: BoxDecoration(
+            gradient: AppTheme.brandGradient,
+            borderRadius: BorderRadius.circular(AppTheme.radiusSm),
+            boxShadow: _hover
+                ? [
+                    BoxShadow(
+                      color: AppTheme.primary.withValues(alpha: 0.45),
+                      blurRadius: 24,
+                      offset: const Offset(0, 8),
+                    ),
+                  ]
+                : [],
+          ),
+          transform: _hover
+              ? Matrix4.translationValues(0, -2, 0)
+              : Matrix4.identity(),
+          child: Text(
+            widget.label,
+            style: AppTheme.cardTitle.copyWith(
+              fontSize: 15,
+              color: AppTheme.backgroundDeep,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _OutlineGlowButton extends StatefulWidget {
+  const _OutlineGlowButton({required this.label, required this.onTap});
+
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  State<_OutlineGlowButton> createState() => _OutlineGlowButtonState();
+}
+
+class _OutlineGlowButtonState extends State<_OutlineGlowButton> {
+  bool _hover = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hover = true),
+      onExit: (_) => setState(() => _hover = false),
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 16),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(AppTheme.radiusSm),
+            border: Border.all(
+              color: _hover ? AppTheme.secondary : AppTheme.border,
+              width: 1.5,
+            ),
+            color: _hover
+                ? AppTheme.secondary.withValues(alpha: 0.08)
+                : Colors.transparent,
+          ),
+          child: Text(widget.label, style: AppTheme.cardTitle.copyWith(fontSize: 15)),
+        ),
+      ),
+    );
+  }
+}
+
 class _IconLink extends StatelessWidget {
-  const _IconLink({required this.icon, required this.url, required this.label});
+  const _IconLink({
+    required this.icon,
+    required this.url,
+    required this.label,
+    this.delayMs = 0,
+  });
 
   final IconData icon;
   final String url;
   final String label;
+  final int delayMs;
 
   @override
   Widget build(BuildContext context) {
     return Tooltip(
       message: label,
-      child: InkWell(
-        onTap: () => launchUrl(Uri.parse(url)),
-        borderRadius: BorderRadius.circular(AppTheme.radiusSm),
-        child: Ink(
-          decoration: AppTheme.cardDecoration(),
-          padding: const EdgeInsets.all(12),
+      child: GlowCard(
+        padding: const EdgeInsets.all(12),
+        child: InkWell(
+          onTap: () => launchUrl(Uri.parse(url)),
           child: Icon(icon, size: 20, color: AppTheme.textSecondary),
         ),
       ),
-    );
+    )
+        .animate(delay: Duration(milliseconds: delayMs))
+        .fadeIn(duration: 400.ms)
+        .scale(begin: const Offset(0.85, 0.85));
   }
 }
 
@@ -429,12 +578,15 @@ class _AboutSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const _SectionHeader(title: 'About', subtitle: 'Background & skills'),
+          const Reveal(
+            child: _SectionHeader(title: 'About', subtitle: 'Background & skills'),
+          ),
           const SizedBox(height: 32),
-          Container(
-            width: double.infinity,
+          Reveal(
+            delayMs: 80,
+            child: GlowCard(
+            highlighted: true,
             padding: EdgeInsets.all(LayoutBreakpoints.isCompact(width) ? 20 : 28),
-            decoration: AppTheme.cardDecoration(),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -464,13 +616,19 @@ class _AboutSection extends StatelessWidget {
               ],
             ),
           ),
+          ),
           const SizedBox(height: 28),
           _ResponsiveWrap(
             width: contentW,
             spacing: 16,
             children: PortfolioData.skillCategories
+                .asMap()
+                .entries
                 .map(
-                  (cat) => _SkillCard(category: cat),
+                  (e) => Reveal(
+                    delayMs: 100 + e.key * 60,
+                    child: _SkillCard(category: e.value),
+                  ),
                 )
                 .toList(),
           ),
@@ -487,10 +645,7 @@ class _SkillCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(20),
-      decoration: AppTheme.cardDecoration(),
+    return GlowCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -507,11 +662,20 @@ class _SkillCard extends StatelessWidget {
                       vertical: 6,
                     ),
                     decoration: BoxDecoration(
-                      color: AppTheme.surfaceElevated,
+                      gradient: LinearGradient(
+                        colors: [
+                          AppTheme.primary.withValues(alpha: 0.15),
+                          AppTheme.secondary.withValues(alpha: 0.08),
+                        ],
+                      ),
                       borderRadius: BorderRadius.circular(AppTheme.radiusSm),
-                      border: Border.all(color: AppTheme.border),
+                      border: Border.all(
+                        color: AppTheme.primary.withValues(alpha: 0.25),
+                      ),
                     ),
-                    child: Text(s, style: AppTheme.label),
+                    child: Text(s, style: AppTheme.label.copyWith(
+                      color: AppTheme.textSecondary,
+                    )),
                   ),
                 )
                 .toList(),
@@ -549,9 +713,11 @@ class _ProjectsSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const _SectionHeader(
-            title: 'Projects',
-            subtitle: 'By company — SpyNxt, Navin Electricals, TMI Inputs',
+          const Reveal(
+            child: _SectionHeader(
+              title: 'Projects',
+              subtitle: 'By company — SpyNxt, Navin Electricals, TMI Inputs',
+            ),
           ),
           const SizedBox(height: 20),
           SingleChildScrollView(
@@ -583,11 +749,39 @@ class _ProjectsSection extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 24),
-          _ResponsiveWrap(
-            width: LayoutBreakpoints.contentWidth(width, padding),
-            spacing: 16,
-            minItemWidth: 300,
-            children: items.map((p) => _ProjectTile(project: p)).toList(),
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 450),
+            switchInCurve: Curves.easeOutCubic,
+            switchOutCurve: Curves.easeInCubic,
+            transitionBuilder: (child, animation) {
+              return FadeTransition(
+                opacity: animation,
+                child: SlideTransition(
+                  position: Tween<Offset>(
+                    begin: const Offset(0, 0.03),
+                    end: Offset.zero,
+                  ).animate(animation),
+                  child: child,
+                ),
+              );
+            },
+            child: _ResponsiveWrap(
+              key: ValueKey(filter),
+              width: LayoutBreakpoints.contentWidth(width, padding),
+              spacing: 16,
+              minItemWidth: 300,
+              children: items
+                  .asMap()
+                  .entries
+                  .map(
+                    (e) => Reveal(
+                      delayMs: 50 + e.key * 40,
+                      slideY: 0.08,
+                      child: _ProjectTile(project: e.value),
+                    ),
+                  )
+                  .toList(),
+            ),
           ),
         ],
       ),
@@ -602,9 +796,8 @@ class _ProjectTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(22),
-      decoration: AppTheme.cardDecoration(),
+    return GlowCard(
+      glowColor: AppTheme.secondary,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -613,10 +806,10 @@ class _ProjectTile extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: AppTheme.surfaceElevated,
+                  gradient: AppTheme.brandGradient,
                   borderRadius: BorderRadius.circular(AppTheme.radiusSm),
                 ),
-                child: Icon(project.icon, size: 22, color: AppTheme.accent),
+                child: Icon(project.icon, size: 22, color: Colors.white),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -634,13 +827,18 @@ class _ProjectTile extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
-              color: AppTheme.accentMuted.withValues(alpha: 0.25),
+              gradient: LinearGradient(
+                colors: [
+                  AppTheme.primary.withValues(alpha: 0.35),
+                  AppTheme.secondary.withValues(alpha: 0.2),
+                ],
+              ),
               borderRadius: BorderRadius.circular(6),
             ),
             child: Text(
               project.company,
               style: AppTheme.label.copyWith(
-                color: AppTheme.accent,
+                color: AppTheme.secondary,
                 fontSize: 11,
               ),
             ),
@@ -683,50 +881,64 @@ class _ExperienceSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const _SectionHeader(title: 'Experience', subtitle: 'Where I\'ve worked'),
+          const Reveal(
+            child: _SectionHeader(title: 'Experience', subtitle: 'Where I\'ve worked'),
+          ),
           const SizedBox(height: 28),
-          ...PortfolioData.experiences.map(
-            (e) => Padding(
+          ...PortfolioData.experiences.asMap().entries.map(
+            (entry) => Padding(
               padding: const EdgeInsets.only(bottom: 16),
-              child: _ExperienceTile(
-                experience: e,
-                stackHeader: LayoutBreakpoints.isCompact(width),
+              child: Reveal(
+                delayMs: 80 + entry.key * 100,
+                child: _ExperienceTile(
+                  experience: entry.value,
+                  stackHeader: LayoutBreakpoints.isCompact(width),
+                ),
               ),
             ),
           ),
           const SizedBox(height: 24),
-          const _SectionHeader(title: 'Education', subtitle: null),
+          const Reveal(child: _SectionHeader(title: 'Education', subtitle: null)),
           const SizedBox(height: 20),
           Wrap(
             spacing: 16,
             runSpacing: 16,
             children: PortfolioData.education
+                .asMap()
+                .entries
                 .map(
-                  (ed) => SizedBox(
-                    width: LayoutBreakpoints.isExpanded(width)
-                        ? 360
-                        : width - padding.horizontal,
-                    child: Container(
-                      padding: const EdgeInsets.all(22),
-                      decoration: AppTheme.cardDecoration(),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(ed.degree, style: AppTheme.cardTitle),
-                          const SizedBox(height: 6),
-                          Text(ed.institution, style: AppTheme.body.copyWith(fontSize: 14)),
-                          const SizedBox(height: 8),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(ed.duration, style: AppTheme.label),
-                              if (ed.score.isNotEmpty)
-                                Text(ed.score, style: AppTheme.label.copyWith(
-                                  color: AppTheme.textPrimary,
-                                )),
-                            ],
-                          ),
-                        ],
+                  (entry) => Reveal(
+                    delayMs: 80 + entry.key * 100,
+                    child: SizedBox(
+                      width: LayoutBreakpoints.isExpanded(width)
+                          ? 360
+                          : width - padding.horizontal,
+                      child: GlowCard(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(entry.value.degree, style: AppTheme.cardTitle),
+                            const SizedBox(height: 6),
+                            Text(
+                              entry.value.institution,
+                              style: AppTheme.body.copyWith(fontSize: 14),
+                            ),
+                            const SizedBox(height: 8),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(entry.value.duration, style: AppTheme.label),
+                                if (entry.value.score.isNotEmpty)
+                                  Text(
+                                    entry.value.score,
+                                    style: AppTheme.label.copyWith(
+                                      color: AppTheme.textPrimary,
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -769,10 +981,9 @@ class _ExperienceTile extends StatelessWidget {
       ],
     );
 
-    return Container(
-      width: double.infinity,
+    return GlowCard(
+      glowColor: AppTheme.primary,
       padding: const EdgeInsets.all(24),
-      decoration: AppTheme.cardDecoration(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -825,35 +1036,46 @@ class _ContactSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const _SectionHeader(
-            title: 'Contact',
-            subtitle: 'Open to roles and freelance Flutter work',
+          const Reveal(
+            child: _SectionHeader(
+              title: 'Contact',
+              subtitle: 'Open to roles and freelance Flutter work',
+            ),
           ),
           const SizedBox(height: 28),
           Wrap(
             spacing: 16,
             runSpacing: 16,
             children: [
-              _ContactCard(
-                width: cardWidth,
-                icon: Icons.mail_outline_rounded,
-                title: 'Email',
-                value: PortfolioData.email,
-                onTap: () => launchUrl(Uri.parse('mailto:${PortfolioData.email}')),
+              Reveal(
+                delayMs: 60,
+                child: _ContactCard(
+                  width: cardWidth,
+                  icon: Icons.mail_outline_rounded,
+                  title: 'Email',
+                  value: PortfolioData.email,
+                  onTap: () => launchUrl(Uri.parse('mailto:${PortfolioData.email}')),
+                ),
               ),
-              _ContactCard(
-                width: cardWidth,
-                icon: Icons.phone_outlined,
-                title: 'Phone',
-                value: PortfolioData.phone,
-                onTap: () => launchUrl(Uri.parse('tel:${PortfolioData.phone}')),
+              Reveal(
+                delayMs: 120,
+                child: _ContactCard(
+                  width: cardWidth,
+                  icon: Icons.phone_outlined,
+                  title: 'Phone',
+                  value: PortfolioData.phone,
+                  onTap: () => launchUrl(Uri.parse('tel:${PortfolioData.phone}')),
+                ),
               ),
-              _ContactCard(
-                width: cardWidth,
-                icon: Icons.location_on_outlined,
-                title: 'Location',
-                value: PortfolioData.location,
-                onTap: null,
+              Reveal(
+                delayMs: 180,
+                child: _ContactCard(
+                  width: cardWidth,
+                  icon: Icons.location_on_outlined,
+                  title: 'Location',
+                  value: PortfolioData.location,
+                  onTap: null,
+                ),
               ),
             ],
           ),
@@ -882,25 +1104,18 @@ class _ContactCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: width,
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(AppTheme.radiusMd),
-          child: Ink(
-            decoration: AppTheme.cardDecoration(),
-            padding: const EdgeInsets.all(22),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Icon(icon, color: AppTheme.accent, size: 24),
-                const SizedBox(height: 12),
-                Text(title, style: AppTheme.label),
-                const SizedBox(height: 4),
-                Text(value, style: AppTheme.body.copyWith(color: AppTheme.textPrimary)),
-              ],
-            ),
-          ),
+      child: GlowCard(
+        glowColor: AppTheme.secondary,
+        onTap: onTap,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(icon, color: AppTheme.secondary, size: 24),
+            const SizedBox(height: 12),
+            Text(title, style: AppTheme.label),
+            const SizedBox(height: 4),
+            Text(value, style: AppTheme.body.copyWith(color: AppTheme.textPrimary)),
+          ],
         ),
       ),
     );
@@ -918,10 +1133,26 @@ class _SectionHeader extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title, style: AppTheme.sectionTitle),
+        Row(
+          children: [
+            Container(
+              width: 4,
+              height: 28,
+              decoration: BoxDecoration(
+                gradient: AppTheme.brandGradient,
+                borderRadius: BorderRadius.circular(4),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(child: Text(title, style: AppTheme.sectionTitle)),
+          ],
+        ),
         if (subtitle != null) ...[
           const SizedBox(height: 8),
-          Text(subtitle!, style: AppTheme.body.copyWith(fontSize: 15)),
+          Padding(
+            padding: const EdgeInsets.only(left: 16),
+            child: Text(subtitle!, style: AppTheme.body.copyWith(fontSize: 15)),
+          ),
         ],
       ],
     );
@@ -941,18 +1172,23 @@ class _StatChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: width,
+      child: GlowCard(
+      highlighted: true,
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-      decoration: AppTheme.cardDecoration(highlighted: true),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(value, style: AppTheme.displayMedium.copyWith(fontSize: 28)),
+          GradientText(
+            text: value,
+            style: AppTheme.displayMedium.copyWith(fontSize: 28, color: Colors.white),
+          ),
           const SizedBox(height: 4),
           Text(label, style: AppTheme.label),
         ],
       ),
+    ),
     );
   }
 }
@@ -960,6 +1196,7 @@ class _StatChip extends StatelessWidget {
 /// Multi-column wrap that sizes children by available width (no fixed aspect ratio).
 class _ResponsiveWrap extends StatelessWidget {
   const _ResponsiveWrap({
+    super.key,
     required this.width,
     required this.children,
     this.spacing = 16,

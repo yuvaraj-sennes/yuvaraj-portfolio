@@ -2,48 +2,69 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
-  static const Color background = Color(0xFF0C0F14);
-  static const Color surface = Color(0xFF151A22);
-  static const Color surfaceElevated = Color(0xFF1C2330);
-  static const Color border = Color(0xFF2A3344);
-  static const Color accent = Color(0xFF5B9FD4);
-  static const Color accentMuted = Color(0xFF3D6F99);
-  static const Color textPrimary = Color(0xFFF4F6FA);
-  static const Color textSecondary = Color(0xFF9AA5B5);
-  static const Color textMuted = Color(0xFF6B7789);
+  static const Color background = Color(0xFF070B14);
+  static const Color backgroundDeep = Color(0xFF050810);
+  static const Color surface = Color(0xFF121827);
+  static const Color surfaceElevated = Color(0xFF1A2235);
+  static const Color border = Color(0xFF2D3A52);
 
-  static const double radiusSm = 10;
-  static const double radiusMd = 14;
-  static const double radiusLg = 20;
+  static const Color primary = Color(0xFF7C6CFF);
+  static const Color secondary = Color(0xFF22D3EE);
+  static const Color tertiary = Color(0xFFFF6B9D);
+  static const Color accent = primary;
 
-  static const EdgeInsets sectionPaddingDesktop =
-      EdgeInsets.symmetric(horizontal: 72, vertical: 88);
-  static const EdgeInsets sectionPaddingMobile =
-      EdgeInsets.symmetric(horizontal: 24, vertical: 64);
+  static const Color textPrimary = Color(0xFFF8FAFF);
+  static const Color textSecondary = Color(0xFFB4BED0);
+  static const Color textMuted = Color(0xFF7A869C);
 
-  static TextStyle get displayLarge => GoogleFonts.inter(
-        fontSize: 56,
+  static const LinearGradient brandGradient = LinearGradient(
+    colors: [primary, secondary],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  static const LinearGradient surfaceGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [Color(0xFF1A2235), Color(0xFF121827)],
+  );
+
+  static const LinearGradient heroGlow = LinearGradient(
+    colors: [
+      Color(0x337C6CFF),
+      Color(0x0022D3EE),
+    ],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  static const double radiusSm = 12;
+  static const double radiusMd = 16;
+  static const double radiusLg = 24;
+
+  static TextStyle get displayLarge => GoogleFonts.poppins(
+        fontSize: 58,
         fontWeight: FontWeight.w700,
-        letterSpacing: -1.2,
+        letterSpacing: -1.5,
         color: textPrimary,
         height: 1.05,
       );
 
-  static TextStyle get displayMedium => GoogleFonts.inter(
-        fontSize: 36,
-        fontWeight: FontWeight.w600,
-        letterSpacing: -0.5,
+  static TextStyle get displayMedium => GoogleFonts.poppins(
+        fontSize: 38,
+        fontWeight: FontWeight.w700,
+        letterSpacing: -0.8,
         color: textPrimary,
       );
 
-  static TextStyle get sectionTitle => GoogleFonts.inter(
-        fontSize: 28,
+  static TextStyle get sectionTitle => GoogleFonts.poppins(
+        fontSize: 30,
         fontWeight: FontWeight.w600,
         color: textPrimary,
-        letterSpacing: -0.3,
+        letterSpacing: -0.4,
       );
 
-  static TextStyle get cardTitle => GoogleFonts.inter(
+  static TextStyle get cardTitle => GoogleFonts.poppins(
         fontSize: 18,
         fontWeight: FontWeight.w600,
         color: textPrimary,
@@ -60,16 +81,37 @@ class AppTheme {
         fontSize: 13,
         fontWeight: FontWeight.w500,
         color: textMuted,
-        letterSpacing: 0.2,
+        letterSpacing: 0.3,
       );
 
-  static BoxDecoration cardDecoration({bool highlighted = false}) {
+  static BoxDecoration cardDecoration({
+    bool highlighted = false,
+    Color? glowColor,
+  }) {
+    final glow = glowColor ?? primary;
     return BoxDecoration(
-      color: highlighted ? surfaceElevated : surface,
+      gradient: surfaceGradient,
       borderRadius: BorderRadius.circular(radiusMd),
       border: Border.all(
-        color: highlighted ? accent.withValues(alpha: 0.35) : border,
+        color: highlighted ? glow.withValues(alpha: 0.55) : border,
+        width: highlighted ? 1.5 : 1,
       ),
+      boxShadow: highlighted
+          ? [
+              BoxShadow(
+                color: glow.withValues(alpha: 0.18),
+                blurRadius: 28,
+                spreadRadius: 0,
+                offset: const Offset(0, 12),
+              ),
+            ]
+          : [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.25),
+                blurRadius: 16,
+                offset: const Offset(0, 8),
+              ),
+            ],
     );
   }
 }

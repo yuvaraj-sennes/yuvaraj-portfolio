@@ -7,7 +7,8 @@ class PortfolioData {
   static const String phone = '+91 89253 18009';
   static const String location = 'Chennai, India';
   static const String github = 'https://github.com/yuvaraj-sennes';
-  static const String linkedin = 'https://linkedin.com/in/yuvaraj';
+  static const String linkedin =
+      'https://www.linkedin.com/in/yuvaraj-s-468b8b37b';
 
   static const String bio =
       'Flutter developer with 3+ years building production apps for HR, grocery delivery, logistics, e-sign, billing, and internal tools. '

@@ -19,7 +19,8 @@ class PortfolioApp extends StatelessWidget {
         brightness: Brightness.dark,
         scaffoldBackgroundColor: AppTheme.background,
         colorScheme: const ColorScheme.dark(
-          primary: AppTheme.accent,
+          primary: AppTheme.primary,
+          secondary: AppTheme.secondary,
           surface: AppTheme.surface,
         ),
         useMaterial3: true,
