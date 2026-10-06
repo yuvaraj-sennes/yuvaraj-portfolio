@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <base href="$FLUTTER_BASE_HREF">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Yuvaraj S - Flutter Developer | Building production mobile applications with Clean Architecture, BLoC, GraphQL, and Firebase">
+  <meta name="keywords" content="Flutter Developer, Mobile App Developer, Yuvaraj S, Flutter, Dart, Android, iOS, Clean Architecture, BLoC">
+  <meta name="author" content="Yuvaraj S">
+  
+  <!-- Open Graph / Social Media -->
+  <meta property="og:title" content="Yuvaraj S - Flutter Developer Portfolio">
+  <meta property="og:description" content="Building beautiful, performant mobile experiences with Flutter">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://yuvaraj-portfolio.github.io">
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Yuvaraj S - Flutter Developer">
+  <meta name="twitter:description" content="Building beautiful, performant mobile experiences with Flutter">
+  
+  <!-- Theme Color -->
+  <meta name="theme-color" content="#0A0E21">
+  <meta name="msapplication-navbutton-color" content="#0A0E21">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Yuvaraj S">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <title>Yuvaraj S | Flutter Developer Portfolio</title>
+  <link rel="manifest" href="manifest.json">
+  
+  <!-- Preconnect to Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  
+  <style>
+    /* Loading animation */
+    .loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: linear-gradient(135deg, #0A0E21 0%, #1A1F3C 50%, #0F1629 100%);
+    }
+    
+    .loading-spinner {
+      width: 60px;
+      height: 60px;
+      border: 3px solid transparent;
+      border-top-color: #6C63FF;
+      border-right-color: #00D9FF;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="loading" id="loading">
+    <div class="loading-spinner"></div>
+  </div>
+  
+  <script>
+    window.addEventListener('flutter-first-frame', function() {
+      document.getElementById('loading').style.display = 'none';
+    });
+  </script>
+  
+  <script src="flutter_bootstrap.js" async></script>
+</body>
+</html>
