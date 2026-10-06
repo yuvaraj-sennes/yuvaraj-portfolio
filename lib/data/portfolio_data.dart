@@ -6,7 +6,8 @@ class PortfolioData {
   static const String email = 'yuvaraj133433@gmail.com';
   static const String phone = '+91 89253 18009';
   static const String location = 'Chennai, India';
-  static const String github = 'https://github.com/yuvaraj-sennes';
+  static const String github =
+      'https://github.com/yuvaraj133433-tech?tab=repositories';
   static const String linkedin =
       'https://www.linkedin.com/in/yuvaraj-s-468b8b37b';
 
@@ -18,7 +19,7 @@ class PortfolioData {
       'Production Flutter apps — from idea to Play Store & App Store.';
 
   static const int yearsExperience = 3;
-  static const int projectCount = 12;
+  static const int projectCount = 14;
   static const int storeAppsCount = 6;
 
   static final List<SkillCategory> skillCategories = [
@@ -152,6 +153,26 @@ class PortfolioData {
       technologies: ['Flutter', 'REST'],
       icon: Icons.insights_rounded,
     ),
+    Project(
+      company: 'GitHub',
+      name: 'Task Management App',
+      subtitle: 'Open source',
+      description:
+          'Task management application — public repo on company GitHub profile.',
+      technologies: ['Flutter', 'Mobile'],
+      icon: Icons.task_alt_rounded,
+      repoUrl: 'https://github.com/yuvaraj133433-tech/task_management_app',
+    ),
+    Project(
+      company: 'GitHub',
+      name: 'Helyxon Task',
+      subtitle: 'Open source',
+      description:
+          'Helyxon task project — public repo shared from work GitHub account.',
+      technologies: ['Flutter', 'Mobile'],
+      icon: Icons.checklist_rounded,
+      repoUrl: 'https://github.com/yuvaraj133433-tech/helyxon_task',
+    ),
   ];
 
   static final List<String> projectCompanies = [
@@ -159,6 +180,7 @@ class PortfolioData {
     'SpyNxt',
     'Navin Electricals',
     'TMI Inputs',
+    'GitHub',
   ];
 
   static final List<Experience> experiences = [
@@ -213,7 +235,7 @@ class PortfolioData {
   ];
 
   static final List<SocialLink> socialLinks = [
-    SocialLink(name: 'GitHub', icon: Icons.code_rounded, url: github),
+    SocialLink(name: 'GitHub repos', icon: Icons.code_rounded, url: github),
     SocialLink(name: 'LinkedIn', icon: Icons.link_rounded, url: linkedin),
     SocialLink(name: 'Email', icon: Icons.mail_outline_rounded, url: 'mailto:$email'),
     SocialLink(name: 'Phone', icon: Icons.phone_outlined, url: 'tel:$phone'),
@@ -235,6 +257,8 @@ class Project {
   final List<String> technologies;
   final IconData icon;
 
+  final String? repoUrl;
+
   Project({
     required this.company,
     required this.name,
@@ -242,6 +266,7 @@ class Project {
     required this.description,
     required this.technologies,
     required this.icon,
+    this.repoUrl,
   });
 }
 

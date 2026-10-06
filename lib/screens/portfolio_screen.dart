@@ -716,7 +716,8 @@ class _ProjectsSection extends StatelessWidget {
           const Reveal(
             child: _SectionHeader(
               title: 'Projects',
-              subtitle: 'By company — SpyNxt, Navin Electricals, TMI Inputs',
+              subtitle:
+                'SpyNxt, Navin, TMI — plus public repos on GitHub',
             ),
           ),
           const SizedBox(height: 20),
@@ -796,8 +797,11 @@ class _ProjectTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final repo = project.repoUrl;
+
     return GlowCard(
       glowColor: AppTheme.secondary,
+      onTap: repo != null ? () => launchUrl(Uri.parse(repo)) : null,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -862,6 +866,19 @@ class _ProjectTile extends StatelessWidget {
                 )
                 .toList(),
           ),
+          if (repo != null) ...[
+            const SizedBox(height: 14),
+            Row(
+              children: [
+                Icon(Icons.open_in_new_rounded, size: 16, color: AppTheme.secondary),
+                const SizedBox(width: 6),
+                Text(
+                  'View repository',
+                  style: AppTheme.label.copyWith(color: AppTheme.secondary),
+                ),
+              ],
+            ),
+          ],
         ],
       ),
     );
