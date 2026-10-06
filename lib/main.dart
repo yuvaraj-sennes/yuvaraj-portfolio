@@ -3,6 +3,7 @@ import 'screens/portfolio_screen.dart';
 import 'theme/app_theme.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const PortfolioApp());
 }
 
@@ -12,16 +13,14 @@ class PortfolioApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Yuvaraj S - Flutter Developer',
+      title: 'Yuvaraj S — Flutter Developer',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         brightness: Brightness.dark,
-        scaffoldBackgroundColor: AppTheme.darkBg,
-        primaryColor: AppTheme.primaryColor,
+        scaffoldBackgroundColor: AppTheme.background,
         colorScheme: const ColorScheme.dark(
-          primary: AppTheme.primaryColor,
-          secondary: AppTheme.secondaryColor,
-          surface: AppTheme.darkCard,
+          primary: AppTheme.accent,
+          surface: AppTheme.surface,
         ),
         useMaterial3: true,
       ),
